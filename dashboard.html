@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicBot Dashboard - Ayoub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dashboard {
+            background: #18181b;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            border: 1px solid #27272a;
+        }
+        
+        .header {
+            background: #111113;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #27272a;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: black;
+            font-weight: bold;
+        }
+        
+        .now-playing {
+            padding: 30px 25px 20px;
+            background: #27272a;
+            text-align: center;
+        }
+        
+        .thumbnail {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            background: #111113;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .track-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .track-artist {
+            font-size: 15px;
+            color: #a1a1aa;
+        }
+        
+        .controls {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .main-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+        }
+        
+        button {
+            width: 62px;
+            height: 62px;
+            border: none;
+            border-radius: 50%;
+            font-size: 26px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-play {
+            background: #22c55e;
+            color: black;
+            font-size: 28px;
+        }
+        
+        .btn-secondary {
+            background: #3f3f46;
+            color: white;
+        }
+        
+        button:hover {
+            transform: scale(1.08);
+        }
+        
+        .volume {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #27272a;
+            padding: 15px 20px;
+            border-radius: 16px;
+        }
+        
+        .volume-bar {
+            flex: 1;
+            height: 8px;
+            background: #3f3f46;
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .volume-fill {
+            position: absolute;
+            height: 100%;
+            background: #22c55e;
+            border-radius: 999px;
+            width: 75%;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #27272a;
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .add-btn {
+            background: #22c55e;
+            color: black;
+            font-weight: 700;
+            padding: 16px 30px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #22c55e;
+        }
+        
+        .platforms {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        
+        .platform {
+            background: #3f3f46;
+            padding: 6px 14px;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1><span class="logo">♪</span> MusicBot Ayoub</h1>
+            <p style="color:#22c55e; margin-top:8px;">Connecté • Prêt à jouer</p>
+        </div>
+
+        <div class="now-playing" id="now-playing">
+            <div class="thumbnail" id="thumbnail">🎵</div>
+            <div class="track-title" id="track-title">Aucune musique en cours</div>
+            <div class="track-artist" id="track-artist">Colle un lien ci-dessous</div>
+        </div>
+
+        <div class="controls">
+            <div class="main-buttons">
+                <button onclick="pauseMusic()" class="btn-secondary" id="pause-btn">⏸️</button>
+                <button onclick="resumeMusic()" class="btn-play" id="play-btn" style="display:none;">▶️</button>
+                <button onclick="skipMusic()" class="btn-secondary">⏭️</button>
+                <button onclick="stopMusic()" class="btn-secondary">⏹️</button>
+            </div>
+
+            <!-- Volume -->
+            <div class="volume">
+                <span style="font-size:24px;">🔊</span>
+                <div class="volume-bar" onclick="changeVolume(event)">
+                    <div class="volume-fill" id="volume-fill"></div>
+                </div>
+                <span id="volume-text" style="min-width:40px; font-weight:600;">75%</span>
+            </div>
+
+            <!-- Lien -->
+            <div>
+                <input type="text" id="link-input" placeholder="https://youtube.com/... ou spotify.com/... ou soundcloud.com/...">
+                <button onclick="addMusic()" class="add-btn" style="width:100%;">➕ AJOUTER & LANCER</button>
+            </div>
+
+            <div class="platforms">
+                <div class="platform">YouTube</div>
+                <div class="platform">Spotify</div>
+                <div class="platform">SoundCloud</div>
+            </div>
+
+            <div class="status" id="status">Bot prêt • Connecté au salon vocal</div>
+        </div>
+    </div>
+
+    <script>
+        let volume = 75;
+
+        function updateVolume() {
+            document.getElementById('volume-fill').style.width = volume + '%';
+            document.getElementById('volume-text').textContent = volume + '%';
+        }
+
+        function changeVolume(e) {
+            const bar = e.currentTarget;
+            const rect = bar.getBoundingClientRect();
+            volume = Math.round(((e.clientX - rect.left) / rect.width) * 100);
+            volume = Math.max(0, Math.min(100, volume));
+            updateVolume();
+            console.log(`Volume envoyé au bot : ${volume}%`);
+        }
+
+        async function addMusic() {
+            const input = document.getElementById('link-input');
+            const link = input.value.trim();
+            
+            if (!link) {
+                showStatus("❌ Colle un lien valide !");
+                return;
+            }
+
+            showStatus("⏳ Ajout de la musique...");
+            
+            // Simulation (dans la vraie vie, tu peux connecter ce dashboard au bot via une API si tu veux)
+            setTimeout(() => {
+                document.getElementById('track-title').textContent = "Musique en cours";
+                document.getElementById('track-artist').textContent = "Ajoutée depuis le dashboard";
+                document.getElementById('thumbnail').innerHTML = "🎶";
+                
+                document.getElementById('pause-btn').style.display = 'block';
+                document.getElementById('play-btn').style.display = 'none';
+                
+                input.value = '';
+                showStatus("✅ Musique ajoutée et lancée dans Discord !");
+            }, 1200);
+        }
+
+        function pauseMusic() {
+            document.getElementById('pause-btn').style.display = 'none';
+            document.getElementById('play-btn').style.display = 'block';
+            showStatus("⏸️ Musique mise en pause");
+        }
+
+        function resumeMusic() {
+            document.getElementById('pause-btn').style.display = 'block';
+            document.getElementById('play-btn').style.display = 'none';
+            showStatus("▶️ Musique reprise");
+        }
+
+        function skipMusic() {
+            showStatus("⏭️ Passage à la musique suivante...");
+        }
+
+        function stopMusic() {
+            document.getElementById('track-title').textContent = "Aucune musique en cours";
+            document.getElementById('track-artist').textContent = "Prêt à jouer";
+            document.getElementById('thumbnail').innerHTML = "🎵";
+            showStatus("⏹️ Lecture arrêtée");
+        }
+
+        function showStatus(text) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            setTimeout(() => {
+                status.textContent = "Bot prêt • Connecté au salon vocal";
+            }, 3000);
+        }
+
+        // Initialisation
+        window.onload = () => {
+            updateVolume();
+            console.log("🎵 Dashboard MusicBot chargé avec succès !");
+        };
+    </script>
+</body>
+</html>
